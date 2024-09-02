@@ -1,8 +1,53 @@
 import { Skeleton } from '@mui/material';
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
+import { useSpring, animated } from '@react-spring/web'
+import { useDrag } from '@use-gesture/react'
+
 
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+
+
+function PullRelease({ children, fetchSkip}) {
+    const [{ x }, api] = useSpring(() => ({ x: 0 }));
+
+    // Set the drag hook and define component movement based on gesture data
+    const bind = useDrag(
+        ({ down, movement: [mx], direction: [dx] }) => {
+            api.start({ x: down ? mx : 0 });
+
+            if (!down) {
+                if (dx > 0) {
+                    console.log("右にスワイプ");
+                    fetchSkip('previous')
+                } else if (dx < 0) {
+                    console.log("左にスワイプ");
+                    fetchSkip('next')
+                }
+            }
+        },
+        { axis: 'x' }
+    );
+
+    return (
+        <animated.div
+            {...bind()}
+            style={{
+                x,
+                touchAction: 'pan-y', // Y軸でのスクロールを許可
+                display: 'flex',
+                flexShrink: 0,  /* 高さ固定 */
+                height: '60px',
+                width: '100%',
+                gap: '10px',
+                marginTop: '8px',
+            }}
+        >
+            {children}
+        </animated.div>
+    );
+}
+
 
 const wapper = css`
     display: flex;
@@ -46,15 +91,15 @@ const artistCss = css`
 `;
 
 const areEqual = (prevProps, nextProps) => {
-    // propsの比較処理
     return prevProps.now.links['song-id'] === nextProps.now.links['song-id'];
 }
 
-const TopInfo = memo(({ now } ) => {
+const TopInfo = memo(({ now, fetchSkip } ) => {
     console.log("TopInfo~!!!")
     return (
-        <div css={wapper}>
-          <img css={AlbumArt} src={now.links["album-art"]} alt="Album Art" />
+        <PullRelease fetchSkip={fetchSkip}>
+            
+            <img css={AlbumArt} src={now.links["album-art"]} alt="Album Art" />
 
             <div css={infoWapper}>
                 <div css={titleCss}>{now.title}</div>
@@ -66,7 +111,7 @@ const TopInfo = memo(({ now } ) => {
                     }
                 </div>
             </div>
-        </div>
+        </PullRelease>
     )
 }, areEqual)
 

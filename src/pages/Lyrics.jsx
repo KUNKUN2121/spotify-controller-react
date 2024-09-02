@@ -3,6 +3,7 @@ import { Lrc, useRecoverAutoScrollImmediately  } from 'react-lrc';
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import { height } from '@mui/system';
 
 const Lyrics = ({now, progress_ms}) => {
 
@@ -66,6 +67,10 @@ const Lyrics = ({now, progress_ms}) => {
     };
 
     const wapper = css`
+        /* height: 12;
+        overflow: auto;
+            flex-shrink: 0;
+            height: '200px'; */
         /* background-color: #302d2d; */
         position: relative;
         flex: 1;
@@ -76,6 +81,7 @@ const Lyrics = ({now, progress_ms}) => {
         &::-webkit-scrollbar {
             display: none; /* スクロールバー非表示 */
         }
+        
     `;
 
     const lrc = css`
