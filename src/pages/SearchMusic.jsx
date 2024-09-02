@@ -40,7 +40,7 @@ const SearchMusic = () => {
                     },
                     }}
       />
-            <Button onClick={toggleDrawer(true)}>Open drawer</Button>
+
 
             <SwipeableDrawer
                 open={opened}

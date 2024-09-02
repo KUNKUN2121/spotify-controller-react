@@ -26,7 +26,7 @@ const Lyrics = ({now, progress_ms}) => {
                     color: active ? 'white' : '#686D76',
                     transition: 'color 0.3s ease',
                     fontSize: '30px',
-                    textAlign: 'center',
+                    // textAlign: 'center',
                     paddingTop: '8px',
                     width: '100%',
                 }}
