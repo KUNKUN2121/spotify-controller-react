@@ -53,38 +53,7 @@ const bar = css`
 `;
 
 
-const ProgressBar = ({now}) => {
-    const [progress_ms, setProgress_ms] = useState(0);
-    const progressRef = useRef(progress_ms);
-
-    useEffect(() => {
-        progressRef.current = progress_ms;
-    }, [progress_ms]);
-
-    useEffect(() => {
-        setProgress_ms(now.progress_ms + getDelay(now));
-      return () => {
-        setProgress_ms(now.progress_ms + getDelay(now));
-      }
-    }, [now.progress_ms])
-
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress_ms(prevProgress => {
-                const updatedProgress = prevProgress + 500;
-                if(updatedProgress >= now.duration_ms) {
-                    return now.duration_ms;
-                }
-                return updatedProgress;
-            });
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, []);
-
-
-
+const ProgressBar = ({now, progress_ms}) => {
     return (
         <div css={wapper}>
             <div css={bar} style={{
