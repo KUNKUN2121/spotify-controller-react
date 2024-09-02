@@ -1,5 +1,5 @@
 import { Skeleton } from '@mui/material';
-import React from 'react'
+import React, { memo } from 'react'
 
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -21,14 +21,21 @@ const infoWapper = css`
     gap: 4px;
 `;
 
-const title = css`
+const AlbumArt = css`
+    margin-left: 16px;
+    height: 100%;
+`;
+const titleCss = css`
     font-size: 24px;
     color: white;
 `;
 
 const artists = css`
     color: white;
-    
+    display: flex;
+`;
+
+const artistCss = css`    
     &::after {
         content: ", ";
     }
@@ -38,17 +45,31 @@ const artists = css`
     }
 `;
 
-const TopInfo = () => {
-  return (
-    <div css={wapper}>
-        <Skeleton variant="rectangular" width={60} height={60} className="album-art-skeleton" />
-
-        <div css={infoWapper}>
-            <div css={title}>これはテストです。</div>
-            <div css={artists}><p>aa</p></div>
-        </div>
-    </div>
-  )
+const areEqual = (prevProps, nextProps) => {
+    // propsの比較処理
+    return prevProps.now.links['song-id'] === nextProps.now.links['song-id'];
 }
+
+const TopInfo = memo(({ now } ) => {
+    console.log("TopInfo~!!!")
+    return (
+        <div css={wapper}>
+          <img css={AlbumArt} src={now.links["album-art"]} alt="Album Art" />
+
+            <div css={infoWapper}>
+                <div css={titleCss}>{now.title}</div>
+                <div css={artists}>
+                    {            
+                        now.artists.map((artist, index) => (
+                        <p key={index} css={artistCss}>{artist.name}</p>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}, areEqual)
+
+
 
 export default TopInfo

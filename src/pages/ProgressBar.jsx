@@ -1,7 +1,22 @@
 
-import React from 'react'
+import React, {memo, useEffect, useRef, useState} from 'react'
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+const getDelay = (data) =>{
+    const getSpotifyTime = new Date(data.get_spotify_timestamp);
+    const currentDate = new Date();
+    return currentDate.getTime() - getSpotifyTime.getTime();
+}
+
+
+const convertTimeView = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    return `${formattedMinutes}:${formattedSeconds}`;
+};
 
 const wapper = css`
     width: 100%;
@@ -10,13 +25,7 @@ const wapper = css`
     flex-shrink: 0;
 `;
 
-const bar = css`
-    border-radius: 30%;
-    width: 100%;
-    height: 8px;
-    background: #837799;
-    background: linear-gradient(#604498, #604498) no-repeat #837799;
-`;
+
 
 const timeWapper = css`
     margin: 2px 6px 0px;
@@ -35,19 +44,60 @@ const time = css`
     color: #eee;
 `;
 
+const bar = css`
+    border-radius: 30%;
+    width: 100%;
+    height: 8px;
+    background: #837799;
+    background: linear-gradient(#604498, #604498) no-repeat #837799;
+`;
 
-const ProgressBar = () => {
+
+const ProgressBar = ({now}) => {
+    const [progress_ms, setProgress_ms] = useState(0);
+    const progressRef = useRef(progress_ms);
+
+    useEffect(() => {
+        progressRef.current = progress_ms;
+    }, [progress_ms]);
+
+    useEffect(() => {
+        setProgress_ms(now.progress_ms + getDelay(now));
+      return () => {
+        setProgress_ms(now.progress_ms + getDelay(now));
+      }
+    }, [now.progress_ms])
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setProgress_ms(prevProgress => {
+                const updatedProgress = prevProgress + 500;
+                if(updatedProgress >= now.duration_ms) {
+                    return now.duration_ms;
+                }
+                return updatedProgress;
+            });
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, []);
+
+
+
     return (
         <div css={wapper}>
-            <div css={bar}></div>
+            <div css={bar} style={{
+                backgroundSize: `${(now ? (progress_ms / now.duration_ms) * 100 : 0)}%`,
+            }} />
             
             <div css={timeWapper}>
-                <p css={time}>00:00</p>
-                <p css={time}>00:00</p>
+                <p css={time}>{convertTimeView(progress_ms)}</p>
+                <p css={time}>{convertTimeView(now.duration_ms)}</p>
             </div>
         </div>
 
     )
-}
+};
 
 export default ProgressBar
