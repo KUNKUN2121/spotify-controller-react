@@ -67,13 +67,13 @@ const Lyrics = ({now, progress_ms}) => {
     };
 
     const wapper = css`
-        /* height: 12;
-        overflow: auto;
-            flex-shrink: 0;
-            height: '200px'; */
+        /* height: 20%; */
+        /* overflow: auto; */
+  
         /* background-color: #302d2d; */
+        /* flex-shrink: 0; */
         position: relative;
-        flex: 1;
+
         display: flex;
         flex-direction: column;
         overflow: auto;

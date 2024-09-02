@@ -1,88 +1,92 @@
-import { Button, Drawer, SwipeableDrawer } from '@mui/material';
-import React, { useState } from 'react'
+import { Global } from '@emotion/react';
+import { Button, SwipeableDrawer } from '@mui/material';
+import React, { useState } from 'react';
 
 const SearchMusic = () => {
-    const [open, setOpen] = useState(false);
+    const [opened, setOpened] = useState(false);
+
     const toggleDrawer = (newOpen) => () => {
-        setOpen(newOpen);
-      };
+        setOpened(newOpen);
+    };
 
-      const [opened, setOpened] = useState(false);
-
-      const beforeEnter = () => {
+    const beforeEnter = () => {
         console.log('beforeEnter');
-      };
+    };
     
-      const afterEnter = () => {
+    const afterEnter = () => {
         console.log('afterEnter');
-      };
+    };
     
-      const beforeLeave = () => {
+    const beforeLeave = () => {
         console.log('beforeLeave');
-      };
+    };
     
-      const afterLeave = () => {
+    const afterLeave = () => {
         console.log('afterLeave');
-      };
+    };
     
-      const scrollDrawer = () => {
-        console.log('scrollDrrawer')
-      };
+    const scrollDrawer = () => {
+        console.log('scrollDrawer');
+    };
 
-
-      const DrawerList = (
-        <div>
-            aa
-        </div>
-      );
-
+    const drawerBleeding = 100;
     return (
         <div>
+                  <Global
+                    styles={{
+                    ".MuiDrawer-root > .MuiPaper-root": {
+                        height: `calc(50% -${drawerBleeding}px)`,
+                        overflow: "visible",
+                    },
+                    }}
+      />
             <Button onClick={toggleDrawer(true)}>Open drawer</Button>
-            {/* <Drawer open={open} onClose={toggleDrawer(false)}>
-                {DrawerList}
-            </Drawer> */}
-            <button
-                onClick={() => setOpened(true)}
-            >aa</button>
 
             <SwipeableDrawer
                 open={opened}
-                anchor="bottom" // Set the anchor to "bottom"
-                speed={300}
-                easingType="easeOutCubic"
-                onClose={() => setOpened(false)}
-                onBeforeEnter={() => beforeEnter()}
-                onAfterEnter={() => afterEnter()}
-                onBeforeLeave={() => beforeLeave()}
-                onAfterLeave={() => afterLeave()}
-                onScroll={() => scrollDrawer()}
-                swipeAreaWidth={500}
+                anchor="bottom"
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+                swipeAreaWidth={drawerBleeding}
+                disableSwipeToOpen={false}
+                ModalProps={{
+                    keepMounted: true,
+                }}
             >
-                <div style={{
-                    position: "absolute",
-                    // top: -50,
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                    visibility: "visible",
-                    right: 0,
-                    left: 0,
-                }}>
+                <div>
+                    {/* 常に表示される部分 */}
                     <div style={{
+                        backgroundColor: "#eee",
                         position: "absolute",
-                        top: -50,
-                        paddingTop: '50px',
-                        height: '50px',
-                        backgroundColor: 'red'
-                    }}></div>
-                    contentsddd<br />
-                    contentsddd<br />
-                    contentsddd<br />
-                    contentsddd<br />
+                        top: `-${drawerBleeding}px`,
+                        height: `${drawerBleeding}px`,
+                        borderTopLeftRadius: 8,
+                        borderTopRightRadius: 8,
+                        visibility : 'visible',
+                        right: 0,
+                        left: 0,
+                        zIndex: 1,
+                    }}>
+                        常に表示される部分!!!
+                    </div>
+
+                    {/* スクロールされるコンテンツ */}
+                    <div style={{
+                        height: '50vh',
+                        overflowY: 'auto',
+                        padding: '16px'
+                    }}>
+                        contentsddd<br />
+                        contentsddd<br />
+                        contentsddd<br />
+                        contentsddd<br />
+                        contentsddd<br />
+                        contentsddd<br />
+                    </div>
                 </div>
             </SwipeableDrawer>
         </div>
-    )
+    );
 }
-;
-export default SearchMusic
+
+export default SearchMusic;

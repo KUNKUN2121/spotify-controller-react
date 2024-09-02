@@ -157,6 +157,12 @@ function App() {
                             <SearchMusic/>
                             <TopInfo now={data} fetchSkip={fetchSkip}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
+                            <div className="dummy" style={{
+                                height: "100px",
+                                flexShrink: '0'
+                            }}>
+
+                            </div>
                         </>
                     } />
                 </Routes>
