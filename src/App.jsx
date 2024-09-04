@@ -13,8 +13,10 @@ import useSWR from 'swr';
 import { useSpring, animated } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 import { Button, Snackbar } from "@mui/material";
-import { CleaningServicesOutlined } from "@mui/icons-material";
+import { CleaningServicesOutlined, Search } from "@mui/icons-material";
 import MuiAlert from '@mui/material/Alert';
+import TestDr from "./pages/TestDr";
+import Controller from "./pages/Controller";
 import SearchMusic from "./pages/SearchMusic";
 
 
@@ -25,6 +27,7 @@ function App() {
     const [snackbarSeverity, setSnackbarSeverity] = useState("success");
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarTimer, setSnackbarTimer] = useState(6000);
+    const [snackbarPosition, setSnackbarPosition] = useState({ bottom: '10px' });
 
     const handleOpen = () => {
       setOpen(true);
@@ -33,10 +36,11 @@ function App() {
       setOpen(false)
     };
 
-    const noticeSnackbar = (severity, message, timer) => {
+    const noticeSnackbar = (severity, message, timer, postion = "{bottom: '10px") => {
         setSnackbarSeverity(severity);
         setSnackbarMessage(message);
         setSnackbarTimer(timer);
+        setSnackbarPosition({ postion });
         handleOpen();
     }
 
@@ -52,7 +56,7 @@ function App() {
         const response = await fetch(url + "/api/" + value + "?room_id=" + roomId);
         console.log(value);
         if(value == "next"){
-            noticeSnackbar("success", "スキップしました。", 3000);
+            noticeSnackbar("success", "スキップしました。", 3000, "top: '20px'");
         }else if(value == "previous"){
             noticeSnackbar("success", "前の曲に戻りました。", 3000);
         }
@@ -117,7 +121,7 @@ function App() {
         return () => clearInterval(interval); // クリーンアップ処理を追加
     }, [data]); // dataが変更されるたびにインターバルを設定
 
-
+ 
     
     // SWR処理
     if (error) return 'エラーが発生しました';
@@ -133,35 +137,52 @@ function App() {
                         user-select: none;
                     }
                 `}
-            />
+    />
+            <Snackbar 
+                // anchorOrigin={{ vertical : "top", horizontal: "center" }}
+                open={open} 
+                autoHideDuration={snackbarTimer} 
+                onClose={handleClose}
+                style={{position: 'fixed', ...snackbarPosition }}
+                // sx={{ bottom: { xs: 90, sm: 0 } }}
+            >
+                <MuiAlert 
+                    // onClose={handleSnackbarClose} 
+                    severity={snackbarSeverity} 
+                    sx={{ width: '100%' }}
+                    >
+                {snackbarMessage}
+                </MuiAlert>
+            </Snackbar>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={
                         <>
-                            <Snackbar 
-                                open={open} 
-                                autoHideDuration={snackbarTimer} 
-                                onClose={handleClose}
-                                // style={{position: 'fixed', ...snackbarPosition }}
-                            >
-                                <MuiAlert 
-                                    // onClose={handleSnackbarClose} 
-                                    severity={snackbarSeverity} 
-                                    sx={{ width: '100%' }}
-                                    >
-                                {snackbarMessage}
-                                </MuiAlert>
-                            </Snackbar>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             {/* <Button variant="contained" onClick={handleOpen}>Register</Button> */}
-                            <SearchMusic/>
-                            <TopInfo now={data} fetchSkip={fetchSkip}/>
+                            {/* <SearchMusic/> */}
+                            
+                            <Controller now={data}/>
+                            <TestDr now={data} fetchSkip={fetchSkip}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
                             <div className="dummy" style={{
                                 height: "100px",
                                 flexShrink: '0'
                             }}>
+                            </div>
+                        </>
+                    } />
+                    <Route path="/search" element={
+                        <>
+                            <ProgressBar now={data} progress_ms={progress_ms} />
+                            <Controller now={data}/>
+                            <SearchMusic url={url} roomId={roomId}/>
+                            <TestDr now={data} fetchSkip={fetchSkip}/>
 
+                            <div className="dummy" style={{
+                                height: "80px",
+                                flexShrink: '0'
+                            }}>
                             </div>
                         </>
                     } />

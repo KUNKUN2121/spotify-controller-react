@@ -71,13 +71,14 @@ const AlbumArt = css`
     height: 100%;
 `;
 const titleCss = css`
-    font-size: 24px;
+    font-size: 16px;
     color: white;
 `;
 
 const artists = css`
     color: white;
     display: flex;
+    font-size: 14px;
 `;
 
 const artistCss = css`    

@@ -1,92 +1,115 @@
-import { Global } from '@emotion/react';
-import { Button, SwipeableDrawer } from '@mui/material';
-import React, { useState } from 'react';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import React, { useEffect, useRef, useState } from 'react'
+import MusicItem from './MusicItem';
+import { SearchOutlined } from '@mui/icons-material';
 
-const SearchMusic = () => {
-    const [opened, setOpened] = useState(false);
+const SearchMusic = ({url,roomId}) => {
+    const inputChanged = (e) => {
+        if(e.target.value !== "") setLoading(true);
+        setSearchName(e.target.value);
+      };
+      const [loading, setLoading] = useState(false);
+      const inputElement = useRef(null);
+      const [searchName, setSearchName] = useState("");
+      const [searchResultList, setSearchResultList] = useState([]);
 
-    const toggleDrawer = (newOpen) => () => {
-        setOpened(newOpen);
-    };
 
-    const beforeEnter = () => {
-        console.log('beforeEnter');
-    };
+      useEffect(() => {
+        // setLoading(true);
+        const timer = setTimeout(() => {
+          if (searchName) {
+            getSearchResult({
+              roomId: roomId,
+              q: searchName,
+              setSearchResultList: setSearchResultList,
+              url: url,
+              setLoading: setLoading
+            });
+            setSearchResultList([]);
+          }
+        }, 500);
     
-    const afterEnter = () => {
-        console.log('afterEnter');
-    };
-    
-    const beforeLeave = () => {
-        console.log('beforeLeave');
-    };
-    
-    const afterLeave = () => {
-        console.log('afterLeave');
-    };
-    
-    const scrollDrawer = () => {
-        console.log('scrollDrawer');
-    };
+        return () => clearTimeout(timer);
+      }, [searchName, roomId, url]);
 
-    const drawerBleeding = 100;
+
+      const getSearchResult = async ({ roomId, q, setSearchResultList, url, setLoading}) => {
+        const getUrl = `${url}/api/search/`;
+        const params = { room_id: roomId, q: q };
+        const query = new URLSearchParams(params);
+        console.log(`${getUrl}?${query}`);
+        return await fetch(`${getUrl}?${query}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setLoading(false);
+            if (data.result) {
+              setSearchResultList(data.result.tracks.items);
+              console.log(data.result.tracks.items);
+            } else {
+              console.log("検索結果がありません");
+            }
+      
+          });
+      };
+      
+      // 読み込み時に検索にフォーカス
+      useEffect(() => { inputElement.current.focus(); }, []);
+
+      const wapper = css`
+            display: flex;
+            flex-direction: column; 
+            /* flex-shrink: 0;  高さ固定 */
+            /* flex: 1; */
+            overflow-y: auto;
+            overflow-x: hidden;
+      `;
+
+      const inputer = css`
+            width: 100%;
+            font-size: 16px;
+      `;
+
+      const resultWapper = css`
+             display: flex;
+            flex-direction: column; 
+            /* flex-shrink: 0;  高さ固定 */
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+      `;
+
+      const searchBox = css`
+        display: flex;
+        font-size: 16px;
+        height: 32px;
+        justify-content: center;
+      `;
+
     return (
-        <div>
-                  <Global
-                    styles={{
-                    ".MuiDrawer-root > .MuiPaper-root": {
-                        height: `calc(50% -${drawerBleeding}px)`,
-                        overflow: "visible",
-                    },
-                    }}
-      />
+        <div css={wapper}>
+            <div css={searchBox}>
+                <input 
+                        css={inputer}
+                        type="text"
+                        placeholder="キーワードを入力"
+                        onChange={inputChanged}
+                        value={searchName}
+                        id="input"
+                        ref={inputElement}
+                />
+                <SearchOutlined style={{fontSize: "32px", color: "white"}}/>
+            </div>
 
-
-            <SwipeableDrawer
-                open={opened}
-                anchor="bottom"
-                onClose={toggleDrawer(false)}
-                onOpen={toggleDrawer(true)}
-                swipeAreaWidth={drawerBleeding}
-                disableSwipeToOpen={false}
-                ModalProps={{
-                    keepMounted: true,
-                }}
-            >
-                <div>
-                    {/* 常に表示される部分 */}
-                    <div style={{
-                        backgroundColor: "#eee",
-                        position: "absolute",
-                        top: `-${drawerBleeding}px`,
-                        height: `${drawerBleeding}px`,
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        visibility : 'visible',
-                        right: 0,
-                        left: 0,
-                        zIndex: 1,
-                    }}>
-                        常に表示される部分!!!
+            <div css={resultWapper}>
+                {searchResultList.map((item) => (
+                    <div>
+                        <MusicItem item={item} />
                     </div>
-
-                    {/* スクロールされるコンテンツ */}
-                    <div style={{
-                        height: '50vh',
-                        overflowY: 'auto',
-                        padding: '16px'
-                    }}>
-                        contentsddd<br />
-                        contentsddd<br />
-                        contentsddd<br />
-                        contentsddd<br />
-                        contentsddd<br />
-                        contentsddd<br />
-                    </div>
-                </div>
-            </SwipeableDrawer>
+                ))}
+            </div>
         </div>
-    );
+    )
 }
 
-export default SearchMusic;
+export default SearchMusic
