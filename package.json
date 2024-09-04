@@ -21,6 +21,7 @@
     "react-lrc": "^3.2.1",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
+    "react-swipeable-list": "^1.9.3",
     "swr": "^2.2.5",
     "web-vitals": "^2.1.4"
   },
