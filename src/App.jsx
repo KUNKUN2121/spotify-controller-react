@@ -121,6 +121,55 @@ function App() {
         return () => clearInterval(interval); // クリーンアップ処理を追加
     }, [data]); // dataが変更されるたびにインターバルを設定
 
+
+    // AddMusic用の関数
+    const addMusic = async (track) => {
+        const csrf = await fetch(`${url}/api/csrf-token`, {
+            credentials: 'include', // セッション情報を含める
+          })
+            .then(response => response.json())
+            .then(data => {
+              return data.token;
+            });
+        console.log("CSRF Token:", csrf);
+        console.log("Adding music:", track.name);
+        const posturl = `${url}/api/add`;
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf,
+            },
+            credentials: 'include', // セッション情報を含める
+            body: JSON.stringify({
+            room_id: roomId,
+            uri: track.uri,
+            })
+        };
+        console.log(posturl);
+        var response = await fetch(posturl, requestOptions)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+
+          noticeSnackbar("success", "追加しました。", 100000, "top: '20px'");
+        })
+        .catch((error) => {
+            noticeSnackbar("error", "エラー : 追加できませんでした。", 3000, "top: '20px'");
+        });
+
+            
+
+        
+
+    }
+
+
  
     
     // SWR処理
@@ -176,7 +225,7 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
-                            <SearchMusic url={url} roomId={roomId}/>
+                            <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
                             <TestDr now={data} fetchSkip={fetchSkip}/>
 
                             <div className="dummy" style={{
@@ -184,6 +233,12 @@ function App() {
                                 flexShrink: '0'
                             }}>
                             </div>
+                        </>
+                    } />
+                    <Route path="/history" element={
+                        <>
+                            <ProgressBar now={data} progress_ms={progress_ms} />
+                            <Controller now={data}/>
                         </>
                     } />
                 </Routes>
