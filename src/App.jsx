@@ -18,6 +18,7 @@ import MuiAlert from '@mui/material/Alert';
 import TestDr from "./pages/TestDr";
 import Controller from "./pages/Controller";
 import SearchMusic from "./pages/SearchMusic";
+import History from "./pages/History";
 
 
 function App() {
@@ -100,7 +101,7 @@ function App() {
 
     // 遅延時間計算
     useEffect(() => {
-        if (data && data.progress_ms !== undefined) {
+        if (data && data.progress_ms !== undefined && data.is_playing == true)  {
             setProgress_ms(data.progress_ms + getDelay(data));
         }
     }, [data]);
@@ -114,7 +115,7 @@ function App() {
     // プログレスバーの更新
     useEffect(() => {
         const interval = setInterval(() => {
-            if (data && data.progress_ms !== undefined) {
+            if (data && data.progress_ms !== undefined && data.is_playing == true) {
                 setProgress_ms(prevProgress => {
                     const updatedProgress = prevProgress + 500;
                     if (updatedProgress >= data.duration_ms) {
@@ -122,6 +123,8 @@ function App() {
                     }
                     return updatedProgress;
                 });
+            }else{
+                mutate(); // SWRのキャッシュを更新
             }
         }, 500);
 
@@ -211,8 +214,11 @@ function App() {
  
     
     // SWR処理
-    if (error) return 'エラーが発生しました';
-    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
+    if (isLoading) return <div style={{color: 'white'}}>Loading...</div>;
+    if (Object.keys(data).length === 0 && data.constructor === Object) {
+        return <div style={{color: 'white'}}>現在再生されていません。</div>;
+    }
 
     return (
         <>
@@ -245,6 +251,7 @@ function App() {
                 {snackbarMessage}
                 </MuiAlert>
             </Snackbar>
+
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={
@@ -281,6 +288,8 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
+                            <History url={url} roomId={roomId}></History>
                         </>
                     } />
                 </Routes>
