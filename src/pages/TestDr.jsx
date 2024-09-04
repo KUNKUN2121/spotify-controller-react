@@ -70,7 +70,7 @@ const TestDr = ({now, fetchSkip, opened, setOpened}) => {
                         left: 0,
                         zIndex: 1,
                     }}>
-                        <TopInfo now={now} fetchSkip={fetchSkip}/>
+                        <TopInfo now={now} fetchSkip={fetchSkip} drawerBleeding={drawerBleeding}/>
                     </div>
 
                     {/* スクロールされるコンテンツ */}

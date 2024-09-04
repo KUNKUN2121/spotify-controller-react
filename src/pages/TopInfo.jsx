@@ -37,10 +37,10 @@ function PullRelease({ children, fetchSkip}) {
                 touchAction: 'pan-y', // Y軸でのスクロールを許可
                 display: 'flex',
                 flexShrink: 0,  /* 高さ固定 */
-                height: '60px',
+                height: `80px`,
                 width: '100%',
                 gap: '10px',
-                marginTop: '8px',
+                alignItems: 'center',
             }}
         >
             {children}
@@ -49,14 +49,7 @@ function PullRelease({ children, fetchSkip}) {
 }
 
 
-const wapper = css`
-    display: flex;
-    flex-shrink: 0;  /* 高さ固定 */
-    height: 60px;
-    width: 100%;
-    gap: 10px;
-    margin-top: 8px;
-`;
+
 
 
 const infoWapper = css`
@@ -68,7 +61,7 @@ const infoWapper = css`
 
 const AlbumArt = css`
     margin-left: 16px;
-    height: 100%;
+    height: 80%;
 `;
 const titleCss = css`
     font-size: 16px;
@@ -90,12 +83,12 @@ const artistCss = css`
     content: "";
     }
 `;
-
+// style={{height: `${drawerBleeding}px`}
 const areEqual = (prevProps, nextProps) => {
     return prevProps.now.links['song-id'] === nextProps.now.links['song-id'];
 }
 
-const TopInfo = memo(({ now, fetchSkip } ) => {
+const TopInfo = memo(({ now, fetchSkip, drawerBleeding } ) => {
     console.log("TopInfo~!!!")
     return (
         <PullRelease fetchSkip={fetchSkip}>
