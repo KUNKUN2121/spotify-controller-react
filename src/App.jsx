@@ -20,9 +20,10 @@ import Controller from "./pages/Controller";
 import SearchMusic from "./pages/SearchMusic";
 import History from "./pages/History";
 
+import useWakeLock from "react-use-wake-lock";
 
 function App() {
-
+    const { isSupported, isLocked, request, release } = useWakeLock();
     // SnackBar
     const [open, setOpen] = useState(false);
     const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -261,7 +262,7 @@ function App() {
                             {/* <SearchMusic/> */}
                             
                             <Controller now={data}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
                             <div className="dummy" style={{
                                 height: "100px",
@@ -275,7 +276,7 @@ function App() {
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
 
                             <div className="dummy" style={{
                                 height: "80px",
@@ -288,7 +289,7 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
                             <History url={url} roomId={roomId}></History>
                         </>
                     } />

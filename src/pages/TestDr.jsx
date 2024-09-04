@@ -3,8 +3,9 @@ import { Button, SwipeableDrawer } from '@mui/material';
 import React, { useState } from 'react';
 import TopInfo from './TopInfo';
 import MusicItem from './MusicItem';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
-const TestDr = ({now, fetchSkip, opened, setOpened}) => {
+const TestDr = ({now, fetchSkip, opened, setOpened, isLocked, release, request}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
 
@@ -91,7 +92,25 @@ const TestDr = ({now, fetchSkip, opened, setOpened}) => {
                                 <MusicItem item={queue}></MusicItem>
                             );
                        })}
-                       
+                       <div>
+                            <p style={{color: 'white'}}>スリープモード</p>
+                            <button type="button" onClick={() => (isLocked ? release() : request())}>
+                                {isLocked ? 
+                                // WakeOnLock 有効
+                                    <>
+                                        有効
+                                        <LightbulbIcon style={{fontSize: 32,}}/>
+                                    </>
+
+                                : 
+                                // WakeOnLock 無効
+                                    <>    
+                                        無効
+                                        <LightbulbIcon style={{fontSize: 32, opacity: 0.3 }}/>
+                                    </>
+                                }
+                            </button>
+                        </div>
                     </div>
                 </div>
             </SwipeableDrawer>
