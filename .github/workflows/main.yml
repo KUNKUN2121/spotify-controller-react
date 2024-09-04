@@ -1,0 +1,38 @@
+name: Deploy React App
+
+on:
+  push:
+    branches:  ['master']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build React app
+      env:
+        CI: false # エラーを無効化している。警告があってもビルドが成功するようにする
+      run: npm run build
+
+    - name: Copy files via SSH
+      uses: appleboy/scp-action@v0.1.5
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        port: ${{ secrets.SERVER_SSH_PORT }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        source: "build/"
+        strip_components: 1
+        target: "/var/www/spc"
