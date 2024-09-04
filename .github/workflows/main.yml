@@ -24,6 +24,8 @@ jobs:
     - name: Build React app
       env:
         CI: false # エラーを無効化している。警告があってもビルドが成功するようにする
+        REACT_APP_BASE_URL : ${{ secrets.REACT_APP_BASE_URL }}
+        REACT_APP_ROOM_ID: ${{ secrets.REACT_APP_ROOM_ID }}
       run: npm run build
 
     - name: Copy files via SSH
