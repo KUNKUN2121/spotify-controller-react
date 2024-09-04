@@ -27,7 +27,8 @@ function App() {
     const [snackbarSeverity, setSnackbarSeverity] = useState("success");
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarTimer, setSnackbarTimer] = useState(6000);
-    const [snackbarPosition, setSnackbarPosition] = useState({ bottom: '10px' });
+    const [snackbarPosition, setSnackbarPosition] = useState();
+    const [opened, setOpened] = useState(false);
 
     const handleOpen = () => {
       setOpen(true);
@@ -36,11 +37,17 @@ function App() {
       setOpen(false)
     };
 
-    const noticeSnackbar = (severity, message, timer, postion = "{bottom: '10px") => {
+    const noticeSnackbar = (severity, message, timer ) => {
         setSnackbarSeverity(severity);
         setSnackbarMessage(message);
         setSnackbarTimer(timer);
-        setSnackbarPosition({ postion });
+        // setSnackbarPosition(position);
+        // if(snackbarBottomKeyboardPosition > snackbarBottomDrawerPosition){
+        //     setSnackbarPosition(snackbarBottomKeyboardPosition)
+        // }else{
+        //     setSnackbarPosition(snackbarBottomDrawerPosition)
+        // }
+        // // setSnackbarPosition(snackbarBottomPosition);
         handleOpen();
     }
 
@@ -56,9 +63,9 @@ function App() {
         const response = await fetch(url + "/api/" + value + "?room_id=" + roomId);
         console.log(value);
         if(value == "next"){
-            noticeSnackbar("success", "スキップしました。", 3000, "top: '20px'");
+            noticeSnackbar("success", "スキップしました。", 3000, {top: '75px'});
         }else if(value == "previous"){
-            noticeSnackbar("success", "前の曲に戻りました。", 3000);
+            noticeSnackbar("success", "前の曲に戻りました。", 3000, {top: '75px'});
         }
         mutate(); // SWRのキャッシュを更新
         return true;
@@ -157,19 +164,50 @@ function App() {
         .then((data) => {
           console.log(data);
 
-          noticeSnackbar("success", "追加しました。", 100000, "top: '20px'");
+          noticeSnackbar("success", "追加しました。", 3000);
         })
         .catch((error) => {
-            noticeSnackbar("error", "エラー : 追加できませんでした。", 3000, "top: '20px'");
+            noticeSnackbar("error", "エラー : 追加できませんでした。", 3000);
         });
-
-            
 
         
 
     }
 
 
+    // Snackbarの位置調整Bottom キーボード
+    let height = window.visualViewport.height;
+    const viewport = window.visualViewport;
+    const resizeHandler = () => {
+        if (!/iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+            height = viewport.height;
+        }
+    
+        const difference = height - viewport.height;
+        var newBottom = "";
+        if(difference <= 10) {
+            newBottom = `${height - viewport.height + 85}px`;
+        }
+        else {
+            newBottom = `${height - viewport.height + 10}px`;
+        }
+        setSnackbarPosition({ bottom: newBottom });
+      };
+    
+      useEffect(() => {
+        window.visualViewport.addEventListener("resize", resizeHandler);
+        return () => window.visualViewport.removeEventListener("resize", resizeHandler);
+      }, []);
+
+
+    // SnackBarの位置調整 
+    useEffect(() => {
+        if(!opened){
+            setSnackbarPosition({ bottom: '85px' });
+        }else{
+            setSnackbarPosition({ bottom: '490px' });
+        }
+      }, [opened]);
  
     
     // SWR処理
@@ -188,7 +226,11 @@ function App() {
                 `}
     />
             <Snackbar 
-                // anchorOrigin={{ vertical : "top", horizontal: "center" }}
+                anchorOrigin={{
+                    //  vertical : "top", horizontal: "center" 
+                    vertical: snackbarPosition.bottom ? 'bottom' : 'top',
+                    horizontal : "center",
+                }}
                 open={open} 
                 autoHideDuration={snackbarTimer} 
                 onClose={handleClose}
@@ -212,7 +254,7 @@ function App() {
                             {/* <SearchMusic/> */}
                             
                             <Controller now={data}/>
-                            <TestDr now={data} fetchSkip={fetchSkip}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
                             <div className="dummy" style={{
                                 height: "100px",
@@ -226,7 +268,7 @@ function App() {
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
-                            <TestDr now={data} fetchSkip={fetchSkip}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened}/>
 
                             <div className="dummy" style={{
                                 height: "80px",

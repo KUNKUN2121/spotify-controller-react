@@ -108,6 +108,17 @@ const Lyrics = ({now, progress_ms}) => {
         right: 0px;
         opacity: 0.6;
     `;
+
+    const noLyrics = css`
+        width: 100%;
+        height: 100%;
+        display: flex;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        color: #eee;
+        margin-top: 24px;
+    `;
     return (    
         <div css={wapper}>
             {/* <button type="button" onClick={recoverAutoScrollImmediately}> */}
@@ -143,7 +154,7 @@ const Lyrics = ({now, progress_ms}) => {
                     style={lrcStyle}
                 />
             :                 
-                <div className="no-lyrics">
+                <div css={noLyrics}>
                     <p>この曲には歌詞がありません。</p>
                 </div>
             }

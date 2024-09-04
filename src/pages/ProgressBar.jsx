@@ -54,6 +54,7 @@ const bar = css`
 
 
 const ProgressBar = ({now, progress_ms}) => {
+
     return (
         <div css={wapper}>
             <div css={bar} style={{
@@ -64,6 +65,7 @@ const ProgressBar = ({now, progress_ms}) => {
                 <p css={time}>{convertTimeView(progress_ms)}</p>
                 <p css={time}>{convertTimeView(now.duration_ms)}</p>
             </div>
+            
         </div>
 
     )

@@ -10,7 +10,7 @@ import React from 'react'
 const wapper = css`
     width: 100%;
     height: 70px;
-    background-color: #000000;
+    /* background-color: #000000; */
     border: 1px solid #565656;
     color: #eee;
     display: flex;
