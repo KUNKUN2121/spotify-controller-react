@@ -21,6 +21,7 @@ import SearchMusic from "./pages/SearchMusic";
 import History from "./pages/History";
 
 import useWakeLock from "react-use-wake-lock";
+import { useApi } from "./hooks/useApi";
 
 function App() {
     const { isSupported, isLocked, request, release } = useWakeLock();
@@ -32,6 +33,8 @@ function App() {
     const [snackbarPosition, setSnackbarPosition] = useState();
     const [opened, setOpened] = useState(false);
 
+
+    
     const handleOpen = () => {
       setOpen(true);
     };
@@ -58,125 +61,7 @@ function App() {
     const url = process.env.REACT_APP_BASE_URL;
     const roomId = process.env.REACT_APP_ROOM_ID;
 
-
-    // スキップ機能
-    const fetchSkip = async (value) => {
-        console.log("fetching_history");
-        const response = await fetch(url + "/api/" + value + "?room_id=" + roomId);
-        console.log(value);
-        if(value == "next"){
-            noticeSnackbar("success", "スキップしました。", 3000, {top: '75px'});
-        }else if(value == "previous"){
-            noticeSnackbar("success", "前の曲に戻りました。", 3000, {top: '75px'});
-        }
-        mutate(); // SWRのキャッシュを更新
-        return true;
-    }
-
-
-
-
-    const [progress_ms, setProgress_ms] = useState(0);
-    const progressRef = useRef(progress_ms);
-    
-
-
-
-    // 遅延計算
-    const getDelay = (data) => {
-        const getSpotifyTime = new Date(data.get_spotify_timestamp);
-        const currentDate = new Date();
-        return currentDate.getTime() - getSpotifyTime.getTime();
-    }
-
-
-
-    // SWR Fetch
-    const fetcher = (...args) => fetch(...args).then(res => res.json())
-    const { data, error, isLoading, mutate } = useSWR(
-        `${url}/api/now?room_id=${roomId}`,
-        fetcher,
-        { refreshInterval: 5000 }
-    );
-
-
-    // 遅延時間計算
-    useEffect(() => {
-        if (data && data.progress_ms !== undefined && data.is_playing == true)  {
-            setProgress_ms(data.progress_ms + getDelay(data));
-        }
-    }, [data]);
-
-
-    // プログレスバーの更新
-    useEffect(() => {
-        progressRef.current = progress_ms;
-    }, [progress_ms]);
-
-    // プログレスバーの更新
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (data && data.progress_ms !== undefined && data.is_playing == true) {
-                setProgress_ms(prevProgress => {
-                    const updatedProgress = prevProgress + 500;
-                    if (updatedProgress >= data.duration_ms) {
-                        return data.duration_ms;
-                    }
-                    return updatedProgress;
-                });
-            }else{
-                mutate(); // SWRのキャッシュを更新
-            }
-        }, 500);
-
-        return () => clearInterval(interval); // クリーンアップ処理を追加
-    }, [data]); // dataが変更されるたびにインターバルを設定
-
-
-    // AddMusic用の関数
-    const addMusic = async (track) => {
-        const csrf = await fetch(`${url}/api/csrf-token`, {
-            credentials: 'include', // セッション情報を含める
-          })
-            .then(response => response.json())
-            .then(data => {
-              return data.token;
-            });
-        console.log("CSRF Token:", csrf);
-        console.log("Adding music:", track.name);
-        const posturl = `${url}/api/add`;
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrf,
-            },
-            credentials: 'include', // セッション情報を含める
-            body: JSON.stringify({
-            room_id: roomId,
-            uri: track.uri,
-            })
-        };
-        console.log(posturl);
-        var response = await fetch(posturl, requestOptions)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log(data);
-
-          noticeSnackbar("success", "追加しました。", 3000);
-        })
-        .catch((error) => {
-            noticeSnackbar("error", "エラー : 追加できませんでした。", 3000);
-        });
-
-        
-
-    }
+    const { data, error, isLoading, progress_ms, fetchSkip, addMusic} = useApi(url, roomId, noticeSnackbar, setOpen);
 
 
     // Snackbarの位置調整Bottom キーボード
