@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { height } from '@mui/system';
 
-const Lyrics = ({now, progress_ms}) => {
+const Lyrics = ({now, progress_ms, isLight}) => {
 
     const { signal, recoverAutoScrollImmediately } =
     useRecoverAutoScrollImmediately();
@@ -23,10 +23,13 @@ const Lyrics = ({now, progress_ms}) => {
             <p
                 key={index}
                 style={{
-                    color: active ? 'white' : '#686D76',
+                    color: isLight ? 'black' : "white",
+                    opacity: active ? 1 : 0.33,
                     transition: 'color 0.3s ease',
                     fontSize: '30px',
                     // textAlign: 'center',
+                    fontWeight: active ? 'bold' : 'normal',
+                    // fontWeight: 'bold',
                     paddingTop: '8px',
                     width: '100%',
                 }}
@@ -107,6 +110,7 @@ const Lyrics = ({now, progress_ms}) => {
         top: 10px;
         right: 0px;
         opacity: 0.6;
+        z-index: 1000;
     `;
 
     const noLyrics = css`

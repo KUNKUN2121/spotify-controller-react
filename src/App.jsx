@@ -23,6 +23,7 @@ import History from "./pages/History";
 import useWakeLock from "react-use-wake-lock";
 import { useApi } from "./hooks/useApi";
 import { useSnackBar } from "./hooks/useSnackBar";
+import BackImg from "./components/BackImg/BackImg";
 
 function App() {
     const url = process.env.REACT_APP_BASE_URL;
@@ -38,8 +39,9 @@ function App() {
     // API取得
     const { data, error, isLoading, progress_ms, fetchSkip, addMusic} = useApi(url, roomId, noticeSnackbar, setOpen);
 
-      // SWR関数
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+    const  [backGroundColor, setBackGroundColor] = useState("");
+    const [isLight, setIsLight] = useState(false);
 
     // SWR処理
     if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
@@ -62,6 +64,7 @@ function App() {
                     }
                 `}
             />
+            <BackImg now={data} setBackGroundColor={setBackGroundColor} setIsLight= {setIsLight}></BackImg>
             <Snackbar 
                 anchorOrigin={{
                     //  vertical : "top", horizontal: "center" 
@@ -88,20 +91,38 @@ function App() {
                     <Route path="/" element={
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data}/>
+                            <Controller now={data} isLight={isLight}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
-                            <Lyrics now={data} progress_ms={progress_ms} />
+                            <Lyrics now={data} progress_ms={progress_ms} isLight={isLight} />
+                            <div style={{display: 'flex'}}>
+                                { backGroundColor ? 
+                                
+                                backGroundColor.map((queue, i) => {
+                                    return (
+                                        <div style={{
+                                            width: "30px",
+                                            height: "30px",
+                                            backgroundColor: queue,
+                                        }}></div>
+                                    );
+                                },
+                            ) : ""}
+
+                            {isLight ? <p style={{color: 'black'}}>明るい</p> : <p style={{color: 'white'}}>暗い</p>}
+                               
+                            </div>
                             <div className="dummy" style={{
                                 height: "100px",
                                 flexShrink: '0'
                             }}>
+                                
                             </div>
                         </>
                     } />
                     <Route path="/search" element={
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data}/>
+                            <Controller now={data} isLight={isLight}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
 
@@ -115,7 +136,7 @@ function App() {
                     <Route path="/history" element={
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data}/>
+                            <Controller now={data}  isLight={isLight}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
                             <History url={url} roomId={roomId}></History>
                         </>

@@ -12,7 +12,7 @@ export const useApi = (url, roomId, noticeSnackbar, setOpen) => {
   const { data, error, isLoading, mutate } = useSWR(
     roomId ? `${url}/api/now?room_id=${roomId}` : null,
     fetcher,
-    { refreshInterval: 5000 }
+    { refreshInterval: 1000 }
   );
 
   // 遅延時間計算

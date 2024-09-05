@@ -11,6 +11,7 @@ import LyricsIcon from '@mui/icons-material/Lyrics';
 import {Link} from 'react-router-dom';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { colors } from '@mui/material';
 
 const wapper = css`
     margin: 10px 0px;
@@ -29,13 +30,27 @@ const btnCss = css`
     color: #837799;
     transition: all 2s ease 0s;`;
 
-const Controller = ({now}) => {
+const iconCss =css`
+    font-size: 32px;
+`;
+
+
+const Controller = ({now, isLight}) => {
         
     return (
         <div css={wapper}>
-            <button css={btnCss}><Link to='/history'><HistoryIcon style={{fontSize: 32}}/></Link></button>
-            <button css={btnCss}><Link to='/'><QueueMusicIcon style={{fontSize: 32}} /></Link></button>
-            <button css={btnCss}><Link to='/search'><SearchIcon style={{fontSize: 32}} /></Link></button>
+            <button css={btnCss}><Link to='/history'><HistoryIcon css={iconCss} 
+            style={{
+                color: isLight ? 'black' : 'white'
+            }}/></Link></button>
+            <button css={btnCss}><Link to='/'><QueueMusicIcon css={iconCss} 
+            style={{
+                color: isLight ? 'black' : 'white'
+            }} /></Link></button>
+            <button css={btnCss}><Link to='/search'><SearchIcon css={iconCss} 
+            style={{
+                color: isLight ? 'black' : 'white'
+            }} /></Link></button>
         </div>
     )
 }
