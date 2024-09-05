@@ -53,7 +53,8 @@ function App() {
 
     // const roomId = process.env.REACT_APP_ROOM_ID;
     var roomId = sessionStorage.getItem('roomId');
-    if(roomId === null){
+    console.log(roomId)
+    if(roomId === null || roomId === "null" || roomId === ""){
         console.log("ridairekuto")
         sessionStorage.setItem('roomId', getRoomId()); 
         roomId = sessionStorage.getItem('roomId');
