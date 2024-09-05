@@ -24,27 +24,70 @@ import useWakeLock from "react-use-wake-lock";
 import { useApi } from "./hooks/useApi";
 import { useSnackBar } from "./hooks/useSnackBar";
 import BackImg from "./components/BackImg/BackImg";
+import JoinRoom from "./pages/JoinRoom";
+
+function getRoomId (){
+    let params = new URLSearchParams(document.location.search).get("roomId");
+    if(params !== null && params !== ""){
+        console.log(params);
+        return params; 
+    }else{
+        return null;
+    }
+   
+}
+
+
+function leaveRoom(){
+    sessionStorage.setItem('roomId', null);
+    document.location.href="/";
+}
 
 function App() {
+    // APIリンク
     const url = process.env.REACT_APP_BASE_URL;
-    const roomId = process.env.REACT_APP_ROOM_ID;
-
     // スリープ防止
     const { isSupported, isLocked, request, release } = useWakeLock();
+    // ドロワー状態管理
     const [bottomDraweropen, setBottomDraweropen] = useState(false);
+
+    // const roomId = process.env.REACT_APP_ROOM_ID;
+    var roomId = sessionStorage.getItem('roomId');
+    if(roomId === null){
+        console.log("ridairekuto")
+        sessionStorage.setItem('roomId', getRoomId()); 
+        roomId = sessionStorage.getItem('roomId');
+        if(roomId == "null"){
+            // console.log("ridairekuto")
+            // document.location.href="/join";
+        }
+
+        console.log("roomId", roomId);
+    }
+
     
     // SnackBar
     const { open, snackbarSeverity, snackbarMessage, snackbarTimer, snackbarPosition, noticeSnackbar, setOpen , handleClose } = useSnackBar({bottomDraweropen});
 
     // API取得
-    const { data, error, isLoading, progress_ms, fetchSkip, addMusic} = useApi(url, roomId, noticeSnackbar, setOpen);
+    const { data, error, isLoading, progress_ms, fetchSkip, addMusic} = useApi(url, roomId !== "null" ? roomId : null, noticeSnackbar, setOpen);
 
 
     const  [backGroundColor, setBackGroundColor] = useState("");
     const [isLight, setIsLight] = useState(false);
 
     // SWR処理
-    if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
+    if(roomId == "null"){
+        return <JoinRoom />
+    }
+    // if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
+    if (error) {
+        if (error.status === 404) {
+            return<div style={{color: "white"}}>ルームが存在しません。<JoinRoom message=""/></div>;
+        }
+        return <div style={{color: 'white'}}><JoinRoom message="エラーが発生しました。。再度参加してください。"/></div>;
+    }
+
     if (isLoading) return <div style={{color: 'white'}}>Loading...</div>;
     if (Object.keys(data).length === 0 && data.constructor === Object) {
         return <div style={{color: 'white'}}>現在再生されていません。</div>;
@@ -92,7 +135,7 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data} isLight={isLight}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
                             <Lyrics now={data} progress_ms={progress_ms} isLight={isLight} />
                             <div style={{display: 'flex'}}>
                                 { backGroundColor ? 
@@ -124,7 +167,7 @@ function App() {
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data} isLight={isLight}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
 
                             <div className="dummy" style={{
                                 height: "80px",
@@ -137,7 +180,7 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}  isLight={isLight}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
                             <History url={url} roomId={roomId}></History>
                         </>
                     } />

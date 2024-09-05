@@ -5,7 +5,7 @@ import TopInfo from './TopInfo';
 import MusicItem from './MusicItem';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
-const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request}) => {
+const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request, leaveRoom}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
 
@@ -110,6 +110,7 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                                     </>
                                 }
                             </button>
+                            <Button onClick={leaveRoom}>ルーム退出</Button>
                         </div>
                     </div>
                 </div>

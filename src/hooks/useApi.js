@@ -7,7 +7,18 @@ export const useApi = (url, roomId, noticeSnackbar, setOpen) => {
 
 
   // SWR関数
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+//   const fetcher = (...args) => fetch(...args).then(res => res.json());
+const fetcher = async (...args) => {
+    const res = await fetch(...args);
+    
+    if (!res.ok) {
+        const error = new Error('ERROR');
+        error.status = res.status;  // ステータスコードをエラーに格納
+        throw error;  // エラーを投げる
+    }
+    
+    return res.json();  // 正常な場合はJSONデータを返す
+};
 
   const { data, error, isLoading, mutate } = useSWR(
     roomId ? `${url}/api/now?room_id=${roomId}` : null,
