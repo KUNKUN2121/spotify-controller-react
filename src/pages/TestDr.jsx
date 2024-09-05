@@ -5,12 +5,12 @@ import TopInfo from './TopInfo';
 import MusicItem from './MusicItem';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
-const TestDr = ({now, fetchSkip, opened, setOpened, isLocked, release, request}) => {
+const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
 
     const toggleDrawer = () => () => {
-        setOpened(!opened);
+        setBottomDraweropen(!bottomDraweropen);
     };
 
     const beforeEnter = () => {
@@ -47,7 +47,7 @@ const TestDr = ({now, fetchSkip, opened, setOpened, isLocked, release, request})
 
 
             <SwipeableDrawer
-                open={opened}
+                open={bottomDraweropen}
                 anchor="bottom"
                 onClose={toggleDrawer(false)}
                 onOpen={toggleDrawer(true)}
