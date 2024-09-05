@@ -43,7 +43,7 @@ export const useApi = (url, roomId, noticeSnackbar, setOpen) => {
           if (updatedProgress >= data.duration_ms) {
             return data.duration_ms;
           }else{
-            mutate(); // SWRの更新
+            // mutate(); // SWRの更新
           }
           return updatedProgress;
         });

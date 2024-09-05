@@ -33,14 +33,14 @@ function App() {
     const [bottomDraweropen, setBottomDraweropen] = useState(false);
     
     // SnackBar
-    const { open, snackbarSeverity, snackbarMessage, snackbarTimer, snackbarPosition,setSnackbarPosition, noticeSnackbar, setOpen , handleClose } = useSnackBar({bottomDraweropen});
-
-    
+    const { open, snackbarSeverity, snackbarMessage, snackbarTimer, snackbarPosition, noticeSnackbar, setOpen , handleClose } = useSnackBar({bottomDraweropen});
 
     // API取得
     const { data, error, isLoading, progress_ms, fetchSkip, addMusic} = useApi(url, roomId, noticeSnackbar, setOpen);
 
-    
+      // SWR関数
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+
     // SWR処理
     if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
     if (isLoading) return <div style={{color: 'white'}}>Loading...</div>;
@@ -57,8 +57,11 @@ function App() {
                         font-family: "Noto Sans JP", sans-serif;
                         user-select: none;
                     }
+                    p {
+                        color: #eee;
+                    }
                 `}
-    />
+            />
             <Snackbar 
                 anchorOrigin={{
                     //  vertical : "top", horizontal: "center" 
@@ -85,9 +88,6 @@ function App() {
                     <Route path="/" element={
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
-                            {/* <Button variant="contained" onClick={handleOpen}>Register</Button> */}
-                            {/* <SearchMusic/> */}
-                            
                             <Controller now={data}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
