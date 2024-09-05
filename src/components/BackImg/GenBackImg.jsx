@@ -1,7 +1,37 @@
-import "./style.css";
 import { v4 as uuidv4 } from "uuid";
 import { useContext } from "react";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 // import { ImagesContext } from "../../ImageContext";
+
+const wapper = css`
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    position: relative;
+    z-index: -1;
+`;
+
+const pixel = css`
+    min-width: 30px;
+    position: relative;
+    z-index: 0;
+    `;
+
+    const blur = css`
+        position: absolute;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    /* background: rgba(0, 0, 0, 0.5); */
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(90px);
+    -webkit-backdrop-filter: blur(90.5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;`;
 
 function GenBackImg({ color, img }) {
 //   const data = useContext(ImagesContext);
@@ -28,15 +58,14 @@ function GenBackImg({ color, img }) {
         position: 'absolute',
         zIndex: "-100",
     }}>
-      {/* {console.log(data)} */}
-      <div className="blur">
+      <div css={blur}>
       </div>
-      <div className="container">
+      <div css={wapper}>
         {position.map((row) => {
           return row.map((col) => {
             return (
               <div
-                className="pixel"
+                css={pixel}
                 style={{ background: col }}
                 key={uuidv4()}
               />
