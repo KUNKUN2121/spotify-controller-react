@@ -31,7 +31,9 @@ function App() {
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarTimer, setSnackbarTimer] = useState(6000);
     const [snackbarPosition, setSnackbarPosition] = useState();
-    const [opened, setOpened] = useState(false);
+
+
+    const [bottomDraweropen, setBottomDraweropen] = useState(false);
 
 
     
@@ -91,12 +93,12 @@ function App() {
 
     // SnackBarの位置調整 
     useEffect(() => {
-        if(!opened){
+        if(!bottomDraweropen){
             setSnackbarPosition({ bottom: '85px' });
         }else{
             setSnackbarPosition({ bottom: '490px' });
         }
-      }, [opened]);
+      }, [bottomDraweropen]);
  
     
     // SWR処理
@@ -147,7 +149,7 @@ function App() {
                             {/* <SearchMusic/> */}
                             
                             <Controller now={data}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
                             <Lyrics now={data} progress_ms={progress_ms} />
                             <div className="dummy" style={{
                                 height: "100px",
@@ -161,7 +163,7 @@ function App() {
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
 
                             <div className="dummy" style={{
                                 height: "80px",
@@ -174,7 +176,7 @@ function App() {
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setOpened={setOpened} opened={opened} isLocked={isLocked} release={release} request={request}/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request}/>
                             <History url={url} roomId={roomId}></History>
                         </>
                     } />
