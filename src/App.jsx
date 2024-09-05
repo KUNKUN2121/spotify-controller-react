@@ -137,26 +137,13 @@ function App() {
                             <ProgressBar now={data} progress_ms={progress_ms} />
                             <Controller now={data} isLight={isLight}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
-                            <Lyrics now={data} progress_ms={progress_ms} isLight={isLight} />
+                            {/* 一時的にisLightはfalseする */}
+                            <Lyrics now={data} progress_ms={progress_ms} isLight={false} />
                             <div style={{display: 'flex'}}>
-                                { backGroundColor ? 
-                                
-                                backGroundColor.map((queue, i) => {
-                                    return (
-                                        <div style={{
-                                            width: "30px",
-                                            height: "30px",
-                                            backgroundColor: queue,
-                                        }}></div>
-                                    );
-                                },
-                            ) : ""}
-
-                            {isLight ? <p style={{color: 'black'}}>明るい</p> : <p style={{color: 'white'}}>暗い</p>}
                                
                             </div>
                             <div className="dummy" style={{
-                                height: "100px",
+                                height: "80px",
                                 flexShrink: '0'
                             }}>
                                 
@@ -183,6 +170,30 @@ function App() {
                             <Controller now={data}  isLight={isLight}/>
                             <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
                             <History url={url} roomId={roomId}></History>
+                            <div className="dummy" style={{
+                                height: "80px",
+                                flexShrink: '0'
+                            }}>
+                            </div>
+                        </>
+                    } />
+                    <Route path="/test" element={
+                        <>
+                            <ProgressBar now={data} progress_ms={progress_ms} />
+                            { backGroundColor ? 
+                                
+                                backGroundColor.map((queue, i) => {
+                                    return (
+                                        <div style={{
+                                            width: "30px",
+                                            height: "30px",
+                                            backgroundColor: queue,
+                                        }}></div>
+                                    );
+                                },
+                            ) : ""}
+
+                            {isLight ? <p style={{color: 'black'}}>明るい</p> : <p style={{color: 'white'}}>暗い</p>}
                         </>
                     } />
                 </Routes>

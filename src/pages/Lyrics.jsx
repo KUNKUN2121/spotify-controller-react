@@ -16,22 +16,25 @@ const Lyrics = ({now, progress_ms, isLight}) => {
       recoverAutoScrollImmediately();
     };
 
-    
+    const blackColor = "#122130";
+    const whiteColor = "#eee";
 
     const lineRenderer = ({ index, active, line}) => {
         return (
             <p
                 key={index}
                 style={{
-                    color: isLight ? 'black' : "white",
-                    opacity: active ? 1 : 0.33,
-                    transition: 'color 0.3s ease',
-                    fontSize: '30px',
+                    color: isLight ? blackColor : whiteColor,
+                    opacity: active ? 1 : 0.15,
+                    transition: 'opacity 0.3s ease, color 0.3s ease',
+                    fontSize: '34px',
                     // textAlign: 'center',
-                    fontWeight: active ? 'bold' : 'normal',
-                    // fontWeight: 'bold',
-                    paddingTop: '8px',
+                    // fontWeight: active ? 'bold' : 'normal',
+                    fontWeight: 'bold',
+                    marginTop: '34px',
                     width: '100%',
+                    
+                    // ここにアニメーション
                 }}
             >
                 {line.content}
@@ -43,9 +46,9 @@ const Lyrics = ({now, progress_ms, isLight}) => {
             <p
                 key={index}
                 style={{
-                    color: 'white',
+                    color: isLight ? blackColor : whiteColor,
                     opacity: '0.9',
-                    transition: 'color 0.3s ease',
+                    transition: 'opacity 0.5s ease, color 0.3s ease',
                     fontSize: '30px',
                     textAlign: 'center',
                 }}
