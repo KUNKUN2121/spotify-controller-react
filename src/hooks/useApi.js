@@ -23,7 +23,7 @@ const fetcher = async (...args) => {
   const { data, error, isLoading, mutate } = useSWR(
     roomId ? `${url}/api/now?room_id=${roomId}` : null,
     fetcher,
-    { refreshInterval: 1000 }
+    { refreshInterval: 2500 }
   );
 
   // 遅延時間計算
