@@ -69,7 +69,6 @@ const History = ({url, roomId}) => {
 
   return (
     <div css={wapper}>
-         <p style={{color: '#eee'}}>再生履歴 (新しい順)</p>
          <div css={resultWapper}>
             {history ? 
                     history.items.map((item, i) => {
