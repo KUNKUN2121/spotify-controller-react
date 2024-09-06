@@ -87,9 +87,9 @@ function App() {
     // if (error) return <div style={{color: 'white'}}>エラーが発生しました。</div>;
     if (error) {
         if (error.status === 404) {
-            return<div style={{color: "white"}}>ルームが存在しません。<JoinRoom message=""/></div>;
+            return<div style={{color: "white"}}><JoinRoom response={error.status}/></div>;
         }
-        return <div style={{color: 'white'}}><JoinRoom message="エラーが発生しました。。再度参加してください。"/></div>;
+        return <div style={{color: 'white'}}><JoinRoom message={"エラーが発生しました。。再度参加してください。"}/></div>;
     }
 
     if (isLoading) return <div style={{color: 'white'}}>Loading...</div>;
