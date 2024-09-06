@@ -10,6 +10,7 @@ import BedtimeOffIcon from '@mui/icons-material/BedtimeOff';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import DrawerQueueItem from '../components/DrawerQueueItem';
 const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request, leaveRoom, roomId, isDarkMode, setIsDarkMode}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
@@ -109,40 +110,26 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                     <div style={{
                         height: '50vh',
                         overflowY: 'auto',
-                        padding: '16px',
+                        padding: '0 16px',
                         backgroundColor: "#191919",
                     }}>
-                       <iframe width="100%" height="52" src={url} frameborder="0" allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="clipboard-read; clipboard-write"></iframe>
-                        
+
+                         {/* <p style={{margin: "24px 0"}}>
+                            アルバム: {now.album}
+                        </p> */}
+
+                        {/*  */}
                         <p style={{
+                            margin: "24px 0",
                             color: "#eee",
                             marginBottom: "8px",
                         }}>次に再生</p>
                        {now.queue.map((queue, i) => {
                             return (
-                                <MusicItem item={queue}></MusicItem>
+                                <DrawerQueueItem item={queue}></DrawerQueueItem>
                             );
                        })}
                        <div>
-                            {/* <p style={{color: 'white'}}>常時ON</p>
-                            <button type="button" onClick={() => (isLocked ? release() : request())}>
-                                {isLocked ? 
-                                // WakeOnLock 有効
-                                    <>
-                                        有効
-                                        <LightbulbIcon style={{fontSize: 32,}}/>
-                                    </>
-
-                                : 
-                                // WakeOnLock 無効
-                                    <>    
-                                        無効
-                                        <LightbulbIcon style={{fontSize: 32, opacity: 0.3 }}/>
-                                    </>
-                                }
-                            </button> */}
-                            {/* <LightbulbIcon style={{fontSize: 32, opacity: 0.3, color: "White"}}/>
-                            <Button onClick={leaveRoom}>ルーム退出</Button> */}
                             <div css={controllers}>
                                 <div css={controller} onClick={() => (isLocked ? release() : request())}>
                                     {isLocked ? <LightbulbIcon fontSize="large"/> : <LightbulbIcon fontSize="large" style={{opacity: 0.3 }}/> }
@@ -158,7 +145,6 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                                     <p>退出</p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
