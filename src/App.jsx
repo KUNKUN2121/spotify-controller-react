@@ -39,7 +39,17 @@ function getRoomId (){
 
 
 function leaveRoom(){
+    // セッションストレージを削除
     sessionStorage.setItem('roomId', null);
+
+    // GETパラメータを削除
+    const url = new URL(window.location);
+    if (url.searchParams.has('roomId')) {
+        url.searchParams.delete('roomId');
+        window.history.pushState({}, '', url.pathname + url.search);
+    }
+
+    // リダイレクト
     document.location.href="/";
 }
 
@@ -56,17 +66,9 @@ function App() {
 
     // const roomId = process.env.REACT_APP_ROOM_ID;
     var roomId = sessionStorage.getItem('roomId');
-    console.log(roomId)
     if(roomId === null || roomId === "null" || roomId === ""){
-        console.log("ridairekuto")
         sessionStorage.setItem('roomId', getRoomId()); 
         roomId = sessionStorage.getItem('roomId');
-        if(roomId == "null"){
-            // console.log("ridairekuto")
-            // document.location.href="/join";
-        }
-
-        console.log("roomId", roomId);
     }
 
     

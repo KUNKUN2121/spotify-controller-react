@@ -47,8 +47,6 @@ const JoinRoom = ({response = null}) => {
         sessionStorage.setItem('roomId', inputText); 
         document.location.href="/?roomId="+inputText;
     }
-
-    console.log(response)
     
     return (
         <div css={wapper}>
