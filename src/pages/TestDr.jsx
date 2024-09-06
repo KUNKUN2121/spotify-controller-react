@@ -1,11 +1,16 @@
-import { Global } from '@emotion/react';
+/** @jsxImportSource @emotion/react */
+import { css, Global } from '@emotion/react';
 import { Button, SwipeableDrawer } from '@mui/material';
 import React, { useState } from 'react';
 import TopInfo from './TopInfo';
 import MusicItem from './MusicItem';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-
-const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request, leaveRoom}) => {
+import LightModeIcon from '@mui/icons-material/LightMode';
+import BedtimeOffIcon from '@mui/icons-material/BedtimeOff';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request, leaveRoom, roomId, isDarkMode, setIsDarkMode}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
 
@@ -33,7 +38,27 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
         console.log('scrollDrawer');
     };
 
+
+    const controllers = css`
+        display: flex;
+        color: #eee;
+        justify-content: space-around;
+        margin-top: 16px;
+    `;
+
+    const controller = css`
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width : calc(100% / 3) ;
+    `;
     const drawerBleeding = 80;
+
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+    }
     return (
         <div>
                   <Global
@@ -93,7 +118,7 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                             );
                        })}
                        <div>
-                            <p style={{color: 'white'}}>スリープモード</p>
+                            {/* <p style={{color: 'white'}}>常時ON</p>
                             <button type="button" onClick={() => (isLocked ? release() : request())}>
                                 {isLocked ? 
                                 // WakeOnLock 有効
@@ -109,8 +134,25 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                                         <LightbulbIcon style={{fontSize: 32, opacity: 0.3 }}/>
                                     </>
                                 }
-                            </button>
-                            <Button onClick={leaveRoom}>ルーム退出</Button>
+                            </button> */}
+                            {/* <LightbulbIcon style={{fontSize: 32, opacity: 0.3, color: "White"}}/>
+                            <Button onClick={leaveRoom}>ルーム退出</Button> */}
+                            <div css={controllers}>
+                                <div css={controller} onClick={() => (isLocked ? release() : request())}>
+                                    {isLocked ? <LightbulbIcon fontSize="large"/> : <LightbulbIcon fontSize="large" style={{opacity: 0.3 }}/> }
+                                    <p>常時ON</p>
+                                </div>
+                                <div css={controller} onClick={toggleDarkMode}>
+                                    {isDarkMode ? <BedtimeIcon fontSize="large"/> : <BedtimeIcon fontSize="large" style={{opacity: 0.3 }}/>}
+                                    {/* <p>{isDarkMode ? "ダークモード" : "ライトモード"}</p> */}
+                                    <p>ダークモード</p>
+                                </div>
+                                <div css={controller} onClick={leaveRoom}>
+                                    <LogoutIcon fontSize="large"/>
+                                    <p>退出</p>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

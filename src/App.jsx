@@ -51,6 +51,9 @@ function App() {
     // ドロワー状態管理
     const [bottomDraweropen, setBottomDraweropen] = useState(false);
 
+    // ダークモード管理
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
     // const roomId = process.env.REACT_APP_ROOM_ID;
     var roomId = sessionStorage.getItem('roomId');
     console.log(roomId)
@@ -108,7 +111,7 @@ function App() {
                     }
                 `}
             />
-            <BackImg now={data} setBackGroundColor={setBackGroundColor} setIsLight= {setIsLight}></BackImg>
+            {!isDarkMode ? <BackImg now={data} setBackGroundColor={setBackGroundColor} setIsLight= {setIsLight}></BackImg> : ""}
             <Snackbar 
                 anchorOrigin={{
                     //  vertical : "top", horizontal: "center" 
@@ -135,8 +138,10 @@ function App() {
                     <Route path="/" element={
                         <>
                             <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data} isLight={isLight}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom}/>
+                            <Controller now={data} isLight={
+                                !isDarkMode ? isLight : false
+                                }/>
+                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
                             {/* 一時的にisLightはfalseする */}
                             <Lyrics now={data} progress_ms={progress_ms} isLight={false} />
                             <div style={{display: 'flex'}}>

@@ -41,15 +41,15 @@ const Controller = ({now, isLight}) => {
         <div css={wapper}>
             <button css={btnCss}><Link to='/history'><HistoryIcon css={iconCss} 
             style={{
-                color: isLight ? 'black' : 'white'
+                color: isLight ? '#122130' : '#eee'
             }}/></Link></button>
             <button css={btnCss}><Link to='/'><QueueMusicIcon css={iconCss} 
             style={{
-                color: isLight ? 'black' : 'white'
+                color: isLight ? '#122130' : '#eee'
             }} /></Link></button>
             <button css={btnCss}><Link to='/search'><SearchIcon css={iconCss} 
             style={{
-                color: isLight ? 'black' : 'white'
+                color: isLight ? '#122130' : '#eee'
             }} /></Link></button>
         </div>
     )
