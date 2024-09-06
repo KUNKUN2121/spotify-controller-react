@@ -59,6 +59,12 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
     }
+
+    const confirmLeaveRoom = () => {
+        if(window.confirm("ルームを退出しますか？")) {
+            leaveRoom();
+        }
+    }
     return (
         <div>
                   <Global
@@ -147,7 +153,7 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                                     {/* <p>{isDarkMode ? "ダークモード" : "ライトモード"}</p> */}
                                     <p>ダークモード</p>
                                 </div>
-                                <div css={controller} onClick={leaveRoom}>
+                                <div css={controller} onClick={confirmLeaveRoom}>
                                     <LogoutIcon fontSize="large"/>
                                     <p>退出</p>
                                 </div>
