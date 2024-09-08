@@ -6,9 +6,8 @@ export const useApi = (url, roomId, noticeSnackbar, setOpen) => {
   const progressRef = useRef(progress_ms);
 
 
-  // SWR関数
-//   const fetcher = (...args) => fetch(...args).then(res => res.json());
 const fetcher = async (...args) => {
+    const startTime = performance.now(); // 開始時間を記録
     const res = await fetch(...args);
     
     if (!res.ok) {
@@ -17,8 +16,16 @@ const fetcher = async (...args) => {
         throw error;  // エラーを投げる
     }
     
-    return res.json();  // 正常な場合はJSONデータを返す
+    const endTime = performance.now(); // 終了時間を記録
+    const delayTime = endTime - startTime; // 遅延時間の計算
+    // console.log(`遅延時間: ${delayTime}ms`);
+
+    return {
+        data: await res.json(),
+        delayTime, // `遅延時間`を返す
+    };
 };
+
 
   const { data, error, isLoading, mutate } = useSWR(
     roomId ? `${url}/api/now?room_id=${roomId}` : null,
@@ -26,20 +33,41 @@ const fetcher = async (...args) => {
     { refreshInterval: 2500 }
   );
 
+  var now;
+  var delayTime;
+  if (data) {
+    now = data.data;  // データ
+    delayTime = data.delayTime;  // 遅延時間
+  }
+
+  var getDelaySettings = 0;
   // 遅延時間計算
-  const getDelay = (data) => {
-    const getSpotifyTime = new Date(data.get_spotify_timestamp);
-    const currentDate = new Date();
-    return currentDate.getTime() - getSpotifyTime.getTime();
+  const getDelay = (now) => {
+    if(getDelaySettings === 0){
+        // アクセス時間からの計算
+        return delayTime;
+    }
+    if(getDelaySettings === 1){
+        // 端末の時刻から計算
+        const getSpotifyTime = new Date(now.get_spotify_timestamp);
+        const currentDate = new Date();
+        return currentDate.getTime() - getSpotifyTime.getTime();
+        
+    }
+    if(getDelaySettings === 2){
+        // 遅延計算なし
+        return 0;
+    }
+
   };
 
   // Progressを入れる
   useEffect(() => {
-    if (data && data.progress_ms !== undefined && data.is_playing) {
-    //   setProgress_ms(data.progress_ms + getDelay(data));
-      setProgress_ms(data.progress_ms);
+    if (now && now.progress_ms !== undefined && now.is_playing) {
+      setProgress_ms(now.progress_ms + getDelay(now));
+    //   setProgress_ms(now.progress_ms);
     }
-  }, [data]);
+  }, [now]);
 
   // progressRef
   useEffect(() => {
@@ -49,11 +77,11 @@ const fetcher = async (...args) => {
   // Progress更新
   useEffect(() => {
     const interval = setInterval(() => {
-      if (data && data.progress_ms !== undefined && data.is_playing) {
+      if (now && now.progress_ms !== undefined && now.is_playing) {
         setProgress_ms((prevProgress) => {
           const updatedProgress = prevProgress + 500;
-          if (updatedProgress >= data.duration_ms) {
-            return data.duration_ms;
+          if (updatedProgress >= now.duration_ms) {
+            return now.duration_ms;
           }else{
             // mutate(); // SWRの更新
           }
@@ -64,7 +92,7 @@ const fetcher = async (...args) => {
     }, 500);
 
     return () => clearInterval(interval);
-  }, [data]);
+  }, [now]);
 
   // スキップ処理
   const fetchSkip = async (value) => {
@@ -84,7 +112,7 @@ const fetcher = async (...args) => {
             credentials: 'include', // セッション情報をいれる
         })
         .then(response => response.json())
-        .then(data => data.token);
+        .then(now => now.token);
 
         const posturl = `${url}/api/add`;
         const requestOptions = {
@@ -105,7 +133,7 @@ const fetcher = async (...args) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.json();
+            const now = await response.json();
             noticeSnackbar("success", "追加しました。", 3000);
             setOpen(true);
         } catch (error) {

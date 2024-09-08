@@ -82,6 +82,8 @@ function App() {
     const  [backGroundColor, setBackGroundColor] = useState("");
     const [isLight, setIsLight] = useState(false);
 
+    var now;
+
     // SWR処理
     if(roomId == "null"){
         return <JoinRoom />
@@ -95,9 +97,16 @@ function App() {
     }
 
     if (isLoading) return <div style={{color: 'white'}}>Loading...</div>;
-    if (Object.keys(data).length === 0 && data.constructor === Object) {
-        return <div style={{color: 'white'}}>現在再生されていません。</div>;
+
+    if(data){
+            now = data.data;  // 実際のデータ
+            if (Object.keys(now).length === 0 && now.constructor === Object) {
+                return <div style={{color: 'white'}}>現在再生されていません。</div>;
+            }
     }
+
+
+    
 
     return (
         <>
@@ -113,7 +122,7 @@ function App() {
                     }
                 `}
             />
-            {!isDarkMode ? <BackImg now={data} setBackGroundColor={setBackGroundColor} setIsLight= {setIsLight}></BackImg> : ""}
+            {!isDarkMode ? <BackImg now={now} setBackGroundColor={setBackGroundColor} setIsLight= {setIsLight}></BackImg> : ""}
             <Snackbar 
                 anchorOrigin={{
                     //  vertical : "top", horizontal: "center" 
@@ -139,11 +148,11 @@ function App() {
                 <Routes>
                     <Route path="/" element={
                         <>
-                            <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data} isLight={!isDarkMode ? isLight : false}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+                            <ProgressBar now={now} progress_ms={progress_ms} />
+                            <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
+                            <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
                             {/* 一時的にisLightはfalseする */}
-                            <Lyrics now={data} progress_ms={progress_ms} isLight={false} />
+                            <Lyrics now={now} progress_ms={progress_ms} isLight={false} />
                             <div style={{display: 'flex'}}>
                                
                             </div>
@@ -157,9 +166,9 @@ function App() {
                     } />
                     <Route path="/search" element={
                         <>
-                            <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data} isLight={!isDarkMode ? isLight : false}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+                            <ProgressBar now={now} progress_ms={progress_ms} />
+                            <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
+                            <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
                             <SearchMusic url={url} roomId={roomId} addMusic={addMusic}/>
 
                             <div className="dummy" style={{
@@ -171,9 +180,9 @@ function App() {
                     } />
                     <Route path="/history" element={
                         <>
-                            <ProgressBar now={data} progress_ms={progress_ms} />
-                            <Controller now={data} isLight={!isDarkMode ? isLight : false}/>
-                            <TestDr now={data} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+                            <ProgressBar now={now} progress_ms={progress_ms} />
+                            <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
+                            <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
                             <History url={url} roomId={roomId}></History>
                             <div className="dummy" style={{
                                 height: "80px",
@@ -184,7 +193,7 @@ function App() {
                     } />
                     <Route path="/test" element={
                         <>
-                            <ProgressBar now={data} progress_ms={progress_ms} />
+                            <ProgressBar now={now} progress_ms={progress_ms} />
                             { backGroundColor ? 
                                 
                                 backGroundColor.map((queue, i) => {
