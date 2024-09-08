@@ -25,6 +25,7 @@ import { useApi } from "./hooks/useApi";
 import { useSnackBar } from "./hooks/useSnackBar";
 import BackImg from "./components/BackImg/BackImg";
 import JoinRoom from "./pages/JoinRoom";
+import SettingPage from "./pages/SettingPage";
 
 function getRoomId (){
     let params = new URLSearchParams(document.location.search).get("roomId");
@@ -106,7 +107,6 @@ function App() {
     }
 
 
-    
 
     return (
         <>
@@ -184,6 +184,21 @@ function App() {
                             <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
                             <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
                             <History url={url} roomId={roomId}></History>
+                            <div className="dummy" style={{
+                                height: "80px",
+                                flexShrink: '0'
+                            }}>
+                            </div>
+                        </>
+                    } />
+                    <Route path="/settings" element={
+                        <>
+                            <ProgressBar now={now} progress_ms={progress_ms} />
+                            <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
+                            <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
+                            <SettingPage />
+
+
                             <div className="dummy" style={{
                                 height: "80px",
                                 flexShrink: '0'

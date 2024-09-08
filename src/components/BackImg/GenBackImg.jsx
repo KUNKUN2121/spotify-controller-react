@@ -22,16 +22,17 @@ const pixel = css`
 
     const blur = css`
         position: absolute;
-    z-index: 10;
-    width: 100vw;
-    height: 100vh;
-    /* background: rgba(0, 0, 0, 0.5); */
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(90px);
-    -webkit-backdrop-filter: blur(90.5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;`;
+        z-index: 10;
+        width: 100vw;
+        height: 100vh;
+        /* background: rgba(0, 0, 0, 0.5); */
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(90px);
+        -webkit-backdrop-filter: blur(90.5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
 
 function GenBackImg({ color, img }) {
 //   const data = useContext(ImagesContext);

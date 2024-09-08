@@ -9,8 +9,10 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import BedtimeOffIcon from '@mui/icons-material/BedtimeOff';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
+import SettingsIcon from '@mui/icons-material/Settings';
 import DrawerQueueItem from '../components/DrawerQueueItem';
+import { Link } from 'react-router-dom';
+import { SettingsAccessibility } from '@mui/icons-material';
 const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked, release, request, leaveRoom, roomId, isDarkMode, setIsDarkMode}) => {
     var url = `https://odesli.co/embed?url=https%3A%2F%2Fsong.link%2Fs%2F${now.links['song-id']}&theme=dark`;
     
@@ -52,7 +54,7 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width : calc(100% / 3) ;
+        width : calc(100% / 4) ;
     `;
     const drawerBleeding = 80;
 
@@ -65,6 +67,9 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
         if(window.confirm("ルームを退出しますか？")) {
             leaveRoom();
         }
+    }
+    const toSettingsPage = () => {
+        setBottomDraweropen(false);
     }
     return (
         <div>
@@ -131,19 +136,23 @@ const TestDr = ({now, fetchSkip, bottomDraweropen, setBottomDraweropen, isLocked
                        })}
                        <div>
                             <div css={controllers}>
-                                <div css={controller} onClick={() => (isLocked ? release() : request())}>
+                                <Button css={controller} onClick={toSettingsPage} component={Link} to="/settings">
+                                    <SettingsIcon fontSize="large"/>
+                                    <p>設定</p>
+                                </Button>
+                                <Button css={controller} onClick={() => (isLocked ? release() : request())}>
                                     {isLocked ? <LightbulbIcon fontSize="large"/> : <LightbulbIcon fontSize="large" style={{opacity: 0.3 }}/> }
                                     <p>常時ON</p>
-                                </div>
-                                <div css={controller} onClick={toggleDarkMode}>
+                                </Button>
+                                <Button css={controller} onClick={toggleDarkMode}>
                                     {isDarkMode ? <BedtimeIcon fontSize="large"/> : <BedtimeIcon fontSize="large" style={{opacity: 0.3 }}/>}
                                     {/* <p>{isDarkMode ? "ダークモード" : "ライトモード"}</p> */}
-                                    <p>ダークモード</p>
-                                </div>
-                                <div css={controller} onClick={confirmLeaveRoom}>
+                                    <p>ダーク</p>
+                                </Button>
+                                <Button css={controller} onClick={confirmLeaveRoom}>
                                     <LogoutIcon fontSize="large"/>
                                     <p>退出</p>
-                                </div>
+                                </Button>
                             </div>
                         </div>
                     </div>

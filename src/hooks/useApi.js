@@ -2,10 +2,50 @@ import { useEffect, useState, useRef } from "react";
 import useSWR from 'swr';
 
 export const useApi = (url, roomId, noticeSnackbar, setOpen) => {
-  const [progress_ms, setProgress_ms] = useState(0);
-  const progressRef = useRef(progress_ms);
+    const [progress_ms, setProgress_ms] = useState(0);
+    const progressRef = useRef(progress_ms);
+    const [delaySetting, setDelaySetting] = useState(0);
+    const [syncTimeSetting, setSyncTimeSetting] = useState(2500);
 
 
+    // localStorageから設定を取得し、stateを更新
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const delay = localStorage.getItem('delay');
+            const syncTime = localStorage.getItem('syncTime');
+            console.log("handle" + delay);
+            if (delay) {
+                setDelaySetting(Math.trunc((delay)));
+            }
+            if (syncTime) {
+                switch (syncTime) {
+                    case 'normal':
+                        setSyncTimeSetting(2500);
+                        break;
+                    case 'low':
+                        setSyncTimeSetting(5000);
+                        break;
+                    case 'high':
+                        setSyncTimeSetting(1000);
+                        break;
+                    default:
+                        setSyncTimeSetting(2500); // デフォルト値
+                }
+            }
+        };
+
+        console.log("設定情報を読み込みました。" + delaySetting);
+
+        handleStorageChange(); // 初期読み込み
+        window.addEventListener("storage", handleStorageChange);
+
+        // クリーンアップ
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, []);
+
+    
 const fetcher = async (...args) => {
     const startTime = performance.now(); // 開始時間を記録
     const res = await fetch(...args);
@@ -30,7 +70,7 @@ const fetcher = async (...args) => {
   const { data, error, isLoading, mutate } = useSWR(
     roomId ? `${url}/api/now?room_id=${roomId}` : null,
     fetcher,
-    { refreshInterval: 2500 }
+    { refreshInterval: syncTimeSetting }
   );
 
   var now;
@@ -40,22 +80,25 @@ const fetcher = async (...args) => {
     delayTime = data.delayTime;  // 遅延時間
   }
 
-  var getDelaySettings = 1;
   // 遅延時間計算
   const getDelay = (now) => {
-    if(getDelaySettings === 0){
-        // アクセス時間からの計算
-        return delayTime;
-    }
-    if(getDelaySettings === 1){
-        // 端末の時刻から計算
+    if(delaySetting === 0){
+        // 端末時間からの計算
         const getSpotifyTime = new Date(now.get_spotify_timestamp);
         const currentDate = new Date();
+        console.log(currentDate.getTime() - getSpotifyTime.getTime());
+        console.log("here1 ")
         return currentDate.getTime() - getSpotifyTime.getTime();
+       
+    }
+    if(delaySetting === 1){
+        // アクセス時間からの計算
+        return delayTime;
         
     }
-    if(getDelaySettings === 2){
+    if(delaySetting === 2){
         // 遅延計算なし
+        console.log("2 : " + 0);
         return 0;
     }
 
