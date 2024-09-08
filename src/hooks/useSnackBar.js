@@ -55,7 +55,8 @@ export const useSnackBar = ({bottomDraweropen}) => {
         if(!bottomDraweropen){
             setSnackbarPosition({ bottom: '85px' });
         }else{
-            setSnackbarPosition({ bottom: '565px' });
+            // setSnackbarPosition({ bottom: '565px' });
+            setSnackbarPosition({ bottom: 'calc(50vh + 80px + 10px)' });
         }
       }, [bottomDraweropen]);
 
