@@ -10,16 +10,19 @@ const wapper = css`
 `;
 
 const inputCss = css`
-    width: 100%;
-    height: 40px;
+    width: 70%;
+    margin: 12px auto;
+    height: 30px;
     border: 1px solid #eee;
     border-radius: 5px;
-    padding: 0 10px;
     font-size: 16px;
 `;
 
 const inputArea = css`
+    display: flex;
     margin-top: 40px;
+    width: 100%;
+    align-items: center;
 `;
 
 const errorMessageStyle = css`
@@ -27,6 +30,15 @@ const errorMessageStyle = css`
     background-color: #494949;
     text-align: center;
     color: #ff8989;
+`;
+
+const submitDivStyle = css`
+    margin-top: 16px;
+    width: 100%;
+`;
+
+const sumibtStyle = css`
+    width: 100%;
 `;
 
 
@@ -59,13 +71,16 @@ const JoinRoom = ({response = null}) => {
             <p>招待リンクを再度開く または、</p>
             <p>ルームコードを入力してください。</p>
             <div css={inputArea}>
-                <label>ルームコードから参加する。</label>
+                <label>コード</label>
                 <input type="url"
                     css={inputCss}
                     value={inputText}
                     onChange={inputChanged}
                 />
-                <Button onClick={submit}>参加する</Button>
+            </div>
+
+            <div css={submitDivStyle}>
+                <Button onClick={submit} css={sumibtStyle} variant="outlined">参加する</Button>
             </div>
         </div>
     )
