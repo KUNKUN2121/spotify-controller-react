@@ -36,7 +36,8 @@ const fetcher = async (...args) => {
   // Progressを入れる
   useEffect(() => {
     if (data && data.progress_ms !== undefined && data.is_playing) {
-      setProgress_ms(data.progress_ms + getDelay(data));
+    //   setProgress_ms(data.progress_ms + getDelay(data));
+      setProgress_ms(data.progress_ms);
     }
   }, [data]);
 
