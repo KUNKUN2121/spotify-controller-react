@@ -4,7 +4,7 @@ import { css, Global } from '@emotion/react';
 import { Button, ButtonBase, FormControl, InputLabel, MenuItem, Select, Slider } from '@mui/material';
 
 
-const SettingPage = () => {
+const SettingPage = ({roomId}) => {
     const wapper = css`
         height: 100%;
         color: #eee;
@@ -39,6 +39,9 @@ const SettingPage = () => {
         }
         `;
 
+    const btn = css`
+        margin-top: 30px;
+    `;
 
 
     // ストレージからKEYの値を取得
@@ -47,10 +50,7 @@ const SettingPage = () => {
         return value;
     }
 
-    // ストレージに値をセット
-    function setSettings(key, value) {
-        localStorage.setItem(key, value);
-    }
+
 
     // 全てのストレージを取得
     function getAllLocalStorageStorage() {
@@ -62,12 +62,38 @@ const SettingPage = () => {
         }
     }
 
+    // 全てのストレージに保存する
+    function setAllSettings() {
+        localStorage.setItem('delay', delay);
+        localStorage.setItem('syncTime', syncTime);
+    }
 
+
+    // 保存ボタン押された時の処理
+    function saveAndReload() {
+        setAllSettings();
+        reloadPage();
+    }
+        // 初期値ボタン押されたときの処理
+    function resetBtn() {
+        setDelayTime(0);
+        setSyncTime('normal');
+    }
+    
+
+    function reloadPage(){
+        const host = window.location.host; 
+        const protocol = window.location.protocol; 
+        const url = `${protocol}//${host}/settings?roomId=${roomId}`;
+        window.location.href = url; // リダイレクト
+    }
 
 
     const [delay, setDelayTime] = useState(0);
     const [syncTime, setSyncTime] = useState('normal');
 
+
+        
     function valuetext(value) {
         return `${value}°C`;
       }
@@ -75,9 +101,6 @@ const SettingPage = () => {
         getAllLocalStorageStorage();
       }, [])
       
-      function reloadPage() {
-        window.location.reload();
-      }
     return (
         <div css={wapper}>
             <div css={wapper2}>
@@ -110,7 +133,6 @@ const SettingPage = () => {
                             label="遅延時間"
                             onChange={(event) => {
                                 setDelayTime(event.target.value);
-                                setSettings('delay', event.target.value);
                             }}
                         >
                             <MenuItem value={0}>推奨 : 端末の時間から計算</MenuItem>
@@ -156,7 +178,6 @@ const SettingPage = () => {
                             label="同期時間の設定"
                             onChange={(event) => {
                                 setSyncTime(event.target.value);
-                                setSettings('syncTime', event.target.value);
                             }}
                         >
                             <MenuItem value={'low'}>低速 : 5秒間隔で同期</MenuItem>
@@ -177,8 +198,12 @@ const SettingPage = () => {
                             marginTop: '30px',
                             display: 'flex',
                             justifyContent: 'center',
+                            flexDirection: 'column',
                     }}>
-                    <Button onClick={reloadPage} variant="contained" >再読み込み</Button>
+                         <Button onClick={resetBtn} variant="contained">初期値にリセット</Button>
+                    <Button onClick={saveAndReload} variant="contained"  style={{ marginTop: '10px', }}
+                    >保存</Button>
+                   
                 </div>
                 </div>
         </div>

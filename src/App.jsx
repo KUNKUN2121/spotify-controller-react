@@ -196,7 +196,7 @@ function App() {
                             <ProgressBar now={now} progress_ms={progress_ms} />
                             <Controller now={now} isLight={!isDarkMode ? isLight : false}/>
                             <TestDr now={now} fetchSkip={fetchSkip} setBottomDraweropen={setBottomDraweropen} bottomDraweropen={bottomDraweropen} isLocked={isLocked} release={release} request={request} leaveRoom={leaveRoom} roomId={roomId} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
-                            <SettingPage />
+                            <SettingPage roomId={roomId}/>
 
 
                             <div className="dummy" style={{
