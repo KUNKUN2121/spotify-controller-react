@@ -40,7 +40,7 @@ const fetcher = async (...args) => {
     delayTime = data.delayTime;  // 遅延時間
   }
 
-  var getDelaySettings = 0;
+  var getDelaySettings = 1;
   // 遅延時間計算
   const getDelay = (now) => {
     if(getDelaySettings === 0){
