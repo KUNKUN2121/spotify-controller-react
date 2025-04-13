@@ -155,7 +155,8 @@ const Lyrics = ({now, progress_ms, isLight}) => {
                     topBlank
                     // verticalSpace={true}
                     css={lrc}
-                    lrc={now.lyrics.syncedLyrics}
+                    // lrc={now.lyrics.syncedLyrics}
+                    lrc={noSyncedLyricsFunction(now.lyrics.syncedLyrics)}
                     currentMillisecond="-1"
                     lineRenderer={lineRendererNoSync}
                     style={lrcStyle}
@@ -170,3 +171,16 @@ const Lyrics = ({now, progress_ms, isLight}) => {
 }
 
 export default Lyrics
+
+
+const noSyncedLyricsFunction = (data) => {
+    // [0:00]のLRCに変換する
+    const formattedLyrics = data
+    .split('\n') // 改行で分割
+    .map(line => `[00:00.00] ${line}`) // 各行に[0:00]を追加
+    .join('\n'); // 再度文字列として結合（表示用）
+
+    console.log(formattedLyrics);
+
+    return formattedLyrics;
+}
